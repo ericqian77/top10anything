@@ -4,6 +4,8 @@ __pycache__/
 .python-version
 .venv/
 venv/
+dev_guide/
+tests/
 
 # Environment
 .env
@@ -21,3 +23,6 @@ build/
 # Tableau
 *.hyper
 *.twb 
+
+#cursor
+.cursorrules
