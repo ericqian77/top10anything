@@ -11,7 +11,8 @@ class TableauDataRow(BaseModel):
     rank: int = Field(..., ge=1, le=10, description="Position in ranking")
     item_name: str = Field(..., description="Name of the ranked item")
     score: float = Field(..., ge=0, le=10, description="Item's score")
-    key_attributes: str = Field(..., description="JSON string of key attributes")
+    advantages: str = Field(..., description="JSON string of advantages")
+    metrics: str = Field(..., description="JSON string of metrics")
     sources: str = Field(..., description="JSON string of source URLs")
     methodology: str = Field(..., description="Analysis methodology")
     batch_id: str = Field(..., description="Unique batch identifier")
@@ -35,8 +36,9 @@ class TableauDataConverter:
                 generated_at=ranking.generated_at,
                 rank=item.rank,
                 item_name=item.name,
-                score=item.score or 0.0,  # Handle optional score
-                key_attributes=json.dumps(item.advantages),  # Use advantages instead of key_attributes
+                score=item.score or 0.0,
+                advantages=json.dumps(item.advantages),
+                metrics=json.dumps(item.metrics),
                 sources=json.dumps(ranking.sources),
                 methodology=ranking.methodology,
                 batch_id=batch_id

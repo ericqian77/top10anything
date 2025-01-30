@@ -23,6 +23,10 @@ build/
 # Tableau
 *.hyper
 *.twb 
+*.log
 
 #cursor
 .cursorrules
+
+# Generated data files
+data/hyper/
