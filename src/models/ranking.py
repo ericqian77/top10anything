@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator, ConfigDict
 from datetime import datetime, UTC
-from typing import List
+from typing import List, Dict, Optional
 from pydantic_ai import RunContext
 
 class RankedItem(BaseModel):
@@ -18,15 +18,24 @@ class RankedItem(BaseModel):
             raise ValueError('Key attributes must be unique')
         return v
 
+class RankingItem(BaseModel):
+    rank: int = Field(..., ge=1, le=10)
+    name: str
+    description: str
+    advantages: List[str] = Field(..., min_length=3)
+    metrics: Dict[str, float] = Field(...)
+    score: Optional[float] = None
+
 class RankingResult(BaseModel):
     topic: str = Field(min_length=3, max_length=50)
     generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
-    rankings: List[RankedItem] = Field(min_length=10, max_length=10)
-    sources: List[HttpUrl] = Field(min_length=1)
+    items: List[RankingItem] = Field(min_length=10, max_length=10)
+    sources: List[str] = Field(min_length=1)
     methodology: str = Field(min_length=100,
                            description="Analysis process description")
+    year: int
 
-    @field_validator('rankings')
+    @field_validator('items')
     @classmethod
     def validate_unique_ranks(cls, v):
         ranks = [item.rank for item in v]
@@ -34,11 +43,33 @@ class RankingResult(BaseModel):
             raise ValueError('Ranking positions must be unique')
         return v
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [{
+                "topic": "Programming Languages",
+                "items": [{
+                    "rank": 1,
+                    "name": "Python",
+                    "score": 9.8,
+                    "advantages": ["Readability", "Ecosystem", "Versatility"],
+                    "description": "General-purpose language with clean syntax and extensive libraries",
+                    "metrics": {"popularity": 9.8, "growth": 8.5}
+                }],
+                "sources": ["https://example.com/rankings"],
+                "methodology": "Combined analysis of GitHub activity, Stack Overflow trends, and industry adoption rates."
+            }]
+        },
+        # Custom serialization for datetime
+        json_encoders={
+            datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S UTC")
+        }
+    )
+
 class Config:
     json_schema_extra = {
         "examples": [{
             "topic": "Programming Languages",
-            "rankings": [{
+            "items": [{
                 "rank": 1,
                 "name": "Python",
                 "score": 9.8,

@@ -1,0 +1,8 @@
+[project]
+name = "top10_analytics"
+version = "0.1.0"
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.10.0",
+    "python-dotenv>=0.21.0"
+] 

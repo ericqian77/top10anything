@@ -40,3 +40,21 @@
 - All ranking positions must be unique
 - Key attributes must have distinct values
 - Scores are normalized to 0-10 scale 
+
+## Ranking Agent Workflow
+
+1. Receives user query
+2. Performs web search using integrated tool
+3. Analyzes results with LLM using ranking criteria
+4. Validates output against Pydantic models
+5. Returns structured RankingResult 
+
+## Search Integration
+
+Uses DuckDuckGo's official API with:
+- Real-time web results
+- Domain extraction
+- Category tagging
+- Strict content filtering
+
+API Documentation: https://duckduckgo.com/api 
