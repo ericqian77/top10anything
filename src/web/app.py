@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+import os
+from pathlib import Path
 
 def create_app() -> FastAPI:
     """Create and configure FastAPI application"""
@@ -10,14 +12,6 @@ def create_app() -> FastAPI:
         description="Web interface for generating and viewing Top 10 rankings",
         version="0.1.0"
     )
-    
-    @app.get("/")
-    async def root():
-        return JSONResponse({
-            "status": "ok",
-            "service": "Top 10 Analytics API",
-            "version": "0.1.0"
-        })
     
     # 配置 CORS
     app.add_middleware(
@@ -28,8 +22,25 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     
+    # 获取静态文件目录的绝对路径
+    static_dir = Path(__file__).parent / "static"
+    
     # 挂载静态文件目录
-    app.mount("/static", StaticFiles(directory="src/web/static"), name="static")
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+    
+    @app.get("/")
+    async def root():
+        """Serve the main HTML page"""
+        return FileResponse(str(static_dir / "index.html"))
+    
+    @app.get("/api")
+    async def api_root():
+        """API status endpoint"""
+        return JSONResponse({
+            "status": "ok",
+            "service": "Top 10 Analytics API",
+            "version": "0.1.0"
+        })
     
     # 导入和注册路由
     from .routes import api

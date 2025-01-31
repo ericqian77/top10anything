@@ -4,46 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 10 Analytics Dashboard</title>
+    <!-- 使用新版 Tableau Embedding API -->
+    <script type='module' src='https://10ax.online.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
+            max-width: 1440px;  /* 匹配仪表板宽度 */
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
         }
         .input-group {
-            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
         }
         #topic {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0;
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1976D2;
         }
         #status {
-            margin: 10px 0;
-            padding: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 4px;
             display: none;
+            font-size: 16px;
         }
-        .success { background-color: #dff0d8; }
-        .error { background-color: #f2dede; }
+        .success { 
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #A5D6A7;
+        }
+        .error { 
+            background-color: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #FFCDD2;
+        }
+        .button-group {
+            margin: 15px 0;
+        }
+        #refresh-btn {
+            background-color: #4CAF50;
+        }
+        #refresh-btn:hover {
+            background-color: #388E3C;
+        }
+        tableau-viz {
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
-    <h1>Top 10 Analytics Dashboard</h1>
-    
-    <div class="input-group">
-        <label for="topic">Enter Topic for Analysis:</label>
-        <input type="text" id="topic" 
-               placeholder="e.g., Best Open Source LLM models in 2024">
-        <button onclick="analyzeTopic()">Analyze</button>
+    <div class="container">
+        <h1>Top 10 Analytics Dashboard</h1>
+        
+        <div class="input-group">
+            <label for="topic">Enter Topic for Analysis:</label>
+            <input type="text" id="topic" 
+                   placeholder="e.g., Best Open Source LLM models in 2024">
+            <button onclick="analyzeTopic()">Analyze</button>
+        </div>
+
+        <div id="status"></div>
+        
+        <div class="button-group">
+            <button id="refresh-btn" onclick="refreshDashboard()">Refresh Dashboard</button>
+        </div>
+
+        <!-- 使用新版 Tableau 嵌入式组件 -->
+        <tableau-viz id='tableau-viz' 
+                     src='https://10ax.online.tableau.com/t/ericqianai01/views/test_workbook1/Top10Anything' 
+                     width='1440' 
+                     height='840' 
+                     hide-tabs 
+                     toolbar='bottom'>
+        </tableau-viz>
     </div>
 
-    <div id="status"></div>
-    
-    <!-- Tableau dashboard will be embedded here -->
-    <div id="tableauViz"></div>
-
     <script>
+        // 获取 Tableau viz 元素的引用
+        const viz = document.getElementById('tableau-viz');
+
+        // 刷新仪表板
+        function refreshDashboard() {
+            viz.refreshDataAsync();
+        }
+
         async function analyzeTopic() {
             const topic = document.getElementById('topic').value;
             const statusDiv = document.getElementById('status');
@@ -55,7 +131,7 @@
             
             try {
                 statusDiv.style.display = 'block';
-                statusDiv.innerHTML = 'Analyzing topic...';
+                statusDiv.innerHTML = '🔄 Analyzing topic...';
                 statusDiv.className = '';
                 
                 const response = await fetch('/api/analyze', {
@@ -69,13 +145,13 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    statusDiv.innerHTML = data.message;
+                    statusDiv.innerHTML = `✅ ${data.message}<br>📊 Click 'Refresh Dashboard' to see the latest data.`;
                     statusDiv.className = 'success';
                 } else {
                     throw new Error(data.detail || 'Analysis failed');
                 }
             } catch (error) {
-                statusDiv.innerHTML = `Error: ${error.message}`;
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
                 statusDiv.className = 'error';
             }
         }
