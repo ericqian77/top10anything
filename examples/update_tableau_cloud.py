@@ -52,7 +52,7 @@ async def main():
         
         # Generate new ranking data
         print("\n3. Generating ranking data...")
-        query = "Best Open Source LLM models in 2024"
+        query = "best universities in the world"
         print(f"🔍 Query: {query}")
         ranking_result = await generate_ranking(query)
         print(f"✅ Generated ranking with {len(ranking_result.items)} items")

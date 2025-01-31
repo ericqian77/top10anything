@@ -15,6 +15,7 @@ from tableauhyperapi import (
     Name,
     Inserter
 )
+from tableauserverclient import JobItem  # 新增导入
 
 class TableauCloudPublisher:
     """Handles publishing and updating data in Tableau Cloud"""
@@ -230,48 +231,34 @@ class TableauCloudPublisher:
             if temp_hyper_path and Path(temp_hyper_path).exists():
                 print(f"  - Debug: Temporary file kept at {temp_hyper_path}")
 
-    async def wait_for_job_completion(self, job_id: str, timeout: int = 300) -> bool:
-        """
-        Wait for a job to complete
-        
-        Args:
-            job_id: The ID of the job to wait for
-            timeout: Maximum time to wait in seconds (default: 300)
-            
-        Returns:
-            bool: True if job completed successfully, False otherwise
-        """
-        with self.server.auth.sign_in(self.tableau_auth):
-            try:
-                # 获取作业状态
-                job = self.server.jobs.get_by_id(job_id)
+    async def wait_for_job(self, job_id: str, timeout: int = 300) -> TSC.JobItem:
+        """使用TSC原生方法等待作业完成"""
+        try:
+            with self.server.auth.sign_in(self.tableau_auth):
+                print(f"  - Waiting for job {job_id} completion (timeout: {timeout}s)")
+                # 使用 TSC 的内置等待方法
+                final_job = self.server.jobs.wait_for_job(job_id, timeout=timeout)
                 
-                # 打印作业基本信息
-                print(f"  - Job ID: {job.id}")
-                print(f"  - Job type: {job.type}")
-                print(f"  - Job mode: {job.mode}")
+                # 打印最终状态
+                print(f"  - Final job status:")
+                finish_code_map = {
+                    0: "Success",
+                    1: "Failed", 
+                    2: "Cancelled"
+                }
+                print(f"    - Finish code: {final_job.finish_code} "
+                     f"({finish_code_map.get(final_job.finish_code, 'Unknown')})")
+                print(f"    - Created at: {final_job.created_at}")
+                print(f"    - Started at: {final_job.started_at}")
+                print(f"    - Completed at: {final_job.completed_at}")
+                if final_job.notes:
+                    print(f"    - Notes: {final_job.notes}")
                 
-                # 检查作业进度
-                if hasattr(job, 'progress'):
-                    print(f"  - Job progress: {job.progress}")
-                    
-                # 检查作业完成状态
-                if hasattr(job, 'completed_at'):
-                    print(f"  - Job completed at: {job.completed_at}")
-                    
-                # 检查作业结果
-                if hasattr(job, 'progress') and job.progress == 100:
-                    print("  ✅ Data update completed successfully")
-                    return True
-                elif hasattr(job, 'error_message') and job.error_message:
-                    print(f"  ❌ Job failed with error: {job.error_message}")
-                    return False
-                else:
-                    # 作业仍在进行中
-                    print(f"  - Job is in progress: {job.progress if hasattr(job, 'progress') else 'Unknown'}%")
-                    return None
+                return final_job
                 
-            except Exception as e:
-                print(f"  ❌ Error checking job status: {str(e)}")
-                # 发生异常时返回 False，表示检查失败
-                return False  
+        except TSC.ServerResponseError as e:
+            print(f"  ❌ Tableau job failed: {e}")
+            raise Exception(f"Tableau job error: {str(e)}")
+        except Exception as e:
+            print(f"  ❌ Error waiting for job: {str(e)}")
+            raise  

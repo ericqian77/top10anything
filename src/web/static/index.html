@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Analytics Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        #topic {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        #status {
+            margin: 10px 0;
+            padding: 10px;
+            display: none;
+        }
+        .success { background-color: #dff0d8; }
+        .error { background-color: #f2dede; }
+    </style>
+</head>
+<body>
+    <h1>Top 10 Analytics Dashboard</h1>
+    
+    <div class="input-group">
+        <label for="topic">Enter Topic for Analysis:</label>
+        <input type="text" id="topic" 
+               placeholder="e.g., Best Open Source LLM models in 2024">
+        <button onclick="analyzeTopic()">Analyze</button>
+    </div>
+
+    <div id="status"></div>
+    
+    <!-- Tableau dashboard will be embedded here -->
+    <div id="tableauViz"></div>
+
+    <script>
+        async function analyzeTopic() {
+            const topic = document.getElementById('topic').value;
+            const statusDiv = document.getElementById('status');
+            
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+            
+            try {
+                statusDiv.style.display = 'block';
+                statusDiv.innerHTML = 'Analyzing topic...';
+                statusDiv.className = '';
+                
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = data.message;
+                    statusDiv.className = 'success';
+                } else {
+                    throw new Error(data.detail || 'Analysis failed');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `Error: ${error.message}`;
+                statusDiv.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html> 
