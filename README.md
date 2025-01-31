@@ -10,7 +10,7 @@ A powerful integration between AI agents and Tableau that helps you:
 
 ## Features
 
-- 🧠 **AI-Powered Ranking Engine**: AI agent system for scoring and ranking data insights
+- 🧠 **AI Agent Ranking Analysis**: AI agent system for scoring and ranking data insights
 - 📊 **Tableau Hyper Pipeline**: Automated conversion of ranking results to Tableau-ready Hyper files
 - ☁️ **Tableau Cloud Integration**: Seamless publishing and updating of data sources in Tableau Cloud
 - 🔄 **Tableau Embed Integration**: Embedded Tableau dashboard that updates automatically when AI agent generates new rankings

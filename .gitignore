@@ -24,6 +24,8 @@ build/
 *.hyper
 *.twb 
 *.log
+hyper.log
+*.log
 
 #cursor
 .cursorrules
