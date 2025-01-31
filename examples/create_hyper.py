@@ -234,26 +234,32 @@ The final rankings combine these metrics with expert analysis of industry trends
     )
 
 def main():
-    # 设置输出目录
+    # set output directory
     output_dir = Path("data/hyper")
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # 创建真实的排名数据
+
+    # create realistic ranking data
     ranking = create_realistic_ranking()
     
-    # 转换为 Tableau 数据格式
+
+    # convert to Tableau data format
     tableau_data = TableauDataConverter.convert(ranking)
     
-    # 创建 Hyper 文件管理器
+
+    # create Hyper file manager
     manager = HyperFileManager(output_dir)
     
-    # 生成文件名（使用时间戳避免覆盖）
+
+    # generate filename (use timestamp to avoid overwriting)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"rankings_{timestamp}"
     
-    # 创建 Hyper 文件
+
+    # create Hyper file
     hyper_path = manager.create_hyper_file(file_name, tableau_data)
     print(f"Created Hyper file: {hyper_path}")
+
 
 if __name__ == "__main__":
     main() 

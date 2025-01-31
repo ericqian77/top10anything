@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 10 Analytics Dashboard</title>
-    <!-- 使用新版 Tableau Embedding API -->
+    <title>Top10Anything AI Agent Dashboard</title>
+  
     <script type='module' src='https://10ax.online.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1440px;  /* 匹配仪表板宽度 */
+            max-width: 1440px;  
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f5f5;
@@ -86,10 +86,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Top 10 Analytics Dashboard</h1>
+        <h1>Top10Anything Agent Dashboard</h1>
         
         <div class="input-group">
-            <label for="topic">Enter Topic for Analysis:</label>
+            <label for="topic">Enter Topic for AI Agent Analysis:</label>
             <input type="text" id="topic" 
                    placeholder="e.g., Best Open Source LLM models in 2024">
             <button onclick="analyzeTopic()">Analyze</button>
@@ -101,7 +101,7 @@
             <button id="refresh-btn" onclick="refreshDashboard()">Refresh Dashboard</button>
         </div>
 
-        <!-- 使用新版 Tableau 嵌入式组件 -->
+     
         <tableau-viz id='tableau-viz' 
                      src='https://10ax.online.tableau.com/t/ericqianai01/views/test_workbook1/Top10Anything' 
                      width='1440' 
@@ -112,10 +112,10 @@
     </div>
 
     <script>
-        // 获取 Tableau viz 元素的引用
+        
         const viz = document.getElementById('tableau-viz');
 
-        // 刷新仪表板
+        
         function refreshDashboard() {
             viz.refreshDataAsync();
         }

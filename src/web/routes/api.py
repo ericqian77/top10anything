@@ -7,7 +7,7 @@ import logging
 from ..services.ranking_service import RankingService
 from pipeline.tableau_cloud import TableauCloudPublisher
 
-# 设置日志
+# set log
 logger = logging.getLogger(__name__)
 
 router = APIRouter()

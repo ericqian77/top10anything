@@ -15,7 +15,7 @@ from tableauhyperapi import (
     Name,
     Inserter
 )
-from tableauserverclient import JobItem  # 新增导入
+from tableauserverclient import JobItem  
 
 class TableauCloudPublisher:
     """Handles publishing and updating data in Tableau Cloud"""
@@ -58,45 +58,42 @@ class TableauCloudPublisher:
         return temp_hyper_path
 
     async def _check_datasource_type(self) -> bool:
-        """
-        检查数据源是否是 live-to-Hyper 类型
-        
-        Returns:
-            bool: True 如果是 live-to-Hyper 类型，False 否则
-        """
+ 
         with self.server.auth.sign_in(self.tableau_auth):
             try:
-                # 获取所有数据源
+                # get all datasources
                 all_datasources, _ = self.server.datasources.get()
                 
-                # 找到目标数据源
+
+                # find target datasource
                 target_datasource = None
                 for datasource in all_datasources:
                     if datasource.name == self.datasource_name:
+
                         target_datasource = datasource
                         break
                 
                 if not target_datasource:
                     raise ValueError(f"Datasource '{self.datasource_name}' not found")
                 
-                # 获取数据源的详细信息
+                # get datasource details
                 self.server.datasources.populate_connections(target_datasource)
                 
-                # 打印数据源信息用于调试
+
+                # print datasource details for debugging
                 print("\nDatasource details:")
                 print(f"  - Name: {target_datasource.name}")
                 print(f"  - ID: {target_datasource.id}")
                 print(f"  - Type: {target_datasource.datasource_type}")
                 print(f"  - Has extracts: {target_datasource.has_extracts}")
                 
+
                 if hasattr(target_datasource, 'connections'):
                     for conn in target_datasource.connections:
                         print(f"  - Connection type: {conn.connection_type}")
                         print(f"  - Server address: {conn.server_address}")
                         print(f"  - Connection attributes: {conn.__dict__}")
                 
-                # 检查是否是 live-to-Hyper 类型
-                # 通常 live-to-Hyper 数据源会有特定的连接类型和属性
                 is_live_to_hyper = (
                     target_datasource.has_extracts and
                     hasattr(target_datasource, 'connections') and
@@ -174,41 +171,46 @@ class TableauCloudPublisher:
 
         temp_hyper_path = None
         try:
-            # 创建临时 Hyper 文件
+            # create temporary Hyper file
             temp_hyper_path = await self._create_temp_hyper_file(data, temp_dir)
             print("  - Created temporary Hyper file")
             print(f"  - Hyper file path: {temp_hyper_path}")
             
+
             with self.server.auth.sign_in(self.tableau_auth):
-                # 获取现有数据源
+                # get existing datasource
                 all_datasources, _ = self.server.datasources.get()
                 datasource_item = next(
                     (ds for ds in all_datasources if ds.name == self.datasource_name),
                     None
                 )
+
                 
                 if not datasource_item:
                     raise ValueError(f"Datasource '{self.datasource_name}' not found")
                 
-                # 准备更新请求
+                # prepare update request
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 request_id = f"update_{timestamp}"
                 
-                # 定义更新动作 - 使用 insert action 追加数据
+
+                # define update actions - use insert action to append data
                 actions = [{
                     "action": "insert",
                     "source-schema": "Extract",  
                     "source-table": "Rankings",   
                     "target-schema": "Extract",
                     "target-table": "Rankings"
+
                 }]
                 
-                # 使用 update_hyper_data 方法更新数据
+                # use update_hyper_data method to update data
                 print("  - Updating datasource with insert action...")
                 print(f"  - Using datasource: {datasource_item.name} (ID: {datasource_item.id})")
                 print(f"  - Request ID: {request_id}")
                 print(f"  - Actions: {actions}")
                 
+
                 job = self.server.datasources.update_hyper_data(
                     datasource_or_connection_item=datasource_item,
                     request_id=request_id,
@@ -227,25 +229,27 @@ class TableauCloudPublisher:
             raise
         
         finally:
-            # 暂时注释掉清理代码，保留临时文件用于调试
+            # temporarily comment out cleanup code, keep temporary file for debugging
             if temp_hyper_path and Path(temp_hyper_path).exists():
                 print(f"  - Debug: Temporary file kept at {temp_hyper_path}")
 
+
     async def wait_for_job(self, job_id: str, timeout: int = 300) -> TSC.JobItem:
-        """使用TSC原生方法等待作业完成"""
+        """Wait for job completion using TSC native method"""
         try:
             with self.server.auth.sign_in(self.tableau_auth):
                 print(f"  - Waiting for job {job_id} completion (timeout: {timeout}s)")
-                # 使用 TSC 的内置等待方法
+                # use TSC built-in wait method
                 final_job = self.server.jobs.wait_for_job(job_id, timeout=timeout)
                 
-                # 打印最终状态
+                # print final status
                 print(f"  - Final job status:")
                 finish_code_map = {
                     0: "Success",
                     1: "Failed", 
                     2: "Cancelled"
                 }
+
                 print(f"    - Finish code: {final_job.finish_code} "
                      f"({finish_code_map.get(final_job.finish_code, 'Unknown')})")
                 print(f"    - Created at: {final_job.created_at}")

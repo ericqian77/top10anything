@@ -13,19 +13,19 @@ def create_app() -> FastAPI:
         version="0.1.0"
     )
     
-    # 配置 CORS
+    # Configure CORS
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # 在生产环境中应该限制来源
+        allow_origins=["*"],  # Should be restricted in production environment
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
     
-    # 获取静态文件目录的绝对路径
+    # Get absolute path of static files directory
     static_dir = Path(__file__).parent / "static"
     
-    # 挂载静态文件目录
+    # Mount static files directory
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
     
     @app.get("/")
@@ -42,7 +42,7 @@ def create_app() -> FastAPI:
             "version": "0.1.0"
         })
     
-    # 导入和注册路由
+    # Import and register routes
     from .routes import api
     app.include_router(api.router, prefix="/api")
     
