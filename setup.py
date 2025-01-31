@@ -9,6 +9,7 @@ setup(
         "pydantic>=2.10.0",
         "tableauhyperapi==0.0.21200",
         "python-dotenv>=0.21.0",
+        "tableauserverclient>=0.17.0",
     ],
     extras_require={
         'dev': [

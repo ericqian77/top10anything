@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pydantic_ai import Agent, RunContext, ModelRetry
-from src.models.ranking import RankingResult, RankingItem
-from src.agent.search import web_search, SearchError
+from models.ranking import RankingResult, RankingItem
+from agent.search import web_search, SearchError
 from typing import Any, List, Dict
 from datetime import datetime, UTC
 
