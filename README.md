@@ -86,7 +86,4 @@ TABLEAU_TOKEN_VALUE=your_token_value
 ## Contributors
 - @ericqian77 - project lead and developer
 
-## License
-MIT License
-
 
