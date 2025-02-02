@@ -62,8 +62,8 @@ TABLEAU_TOKEN_VALUE=your_token_value
 
 ### Tableau Integration
 - Tableau TSC
-- Tableau REST API - Dashboard publishing and management
-- Tableau Hyper API  - Data source generation
+- Tableau REST API - datasource publishing
+- Tableau Hyper API  - Data  generation
 - Tableau Embedding API v3 - Dashboard embedding and interactivity
 
 ### Backend Framework
