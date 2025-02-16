@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 import json
 from typing import List
-from models.ranking import RankingResult
+from src.models.ranking import RankingResult
 
 class TableauDataRow(BaseModel):
     """Represents a single row in the Tableau dataset"""

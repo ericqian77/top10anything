@@ -45,7 +45,11 @@ class DuckDuckGoAPI:
         return parsed.netloc.replace("www.", "")
 
 class SearchError(Exception):
-    pass
+    """Exception raised for search-related errors."""
+    def __init__(self, message: str, original_error: Exception = None):
+        self.message = message
+        self.original_error = original_error
+        super().__init__(self.message)
 
 async def web_search(query: str) -> List[Dict[str, str]]:
     """Perform search using duckduckgo-search library"""

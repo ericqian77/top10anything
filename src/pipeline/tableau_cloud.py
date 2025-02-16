@@ -2,8 +2,8 @@ from pathlib import Path
 import tableauserverclient as TSC
 from typing import List, BinaryIO
 from datetime import datetime
-from pipeline.tableau import TableauDataRow
-from pipeline.hyper import HyperFileManager
+from src.pipeline.tableau import TableauDataRow
+from src.pipeline.hyper import HyperFileManager
 from tableauhyperapi import (
     HyperProcess, 
     Telemetry, 
@@ -16,6 +16,7 @@ from tableauhyperapi import (
     Inserter
 )
 from tableauserverclient import JobItem  
+
 
 class TableauCloudPublisher:
     """Handles publishing and updating data in Tableau Cloud"""

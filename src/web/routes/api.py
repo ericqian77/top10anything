@@ -4,8 +4,10 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 import os
 import logging
-from ..services.ranking_service import RankingService
-from pipeline.tableau_cloud import TableauCloudPublisher
+from src.web.services.ranking_service import RankingService
+from src.pipeline.tableau_cloud import TableauCloudPublisher
+from src.agent.ranking_agent import generate_ranking
+from src.pipeline.tableau import TableauDataConverter
 
 # set log
 logger = logging.getLogger(__name__)

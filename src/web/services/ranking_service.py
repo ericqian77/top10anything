@@ -4,9 +4,9 @@ from typing import Optional
 import logging
 import asyncio
 
-from agent.ranking_agent import generate_ranking
-from pipeline.tableau import TableauDataConverter
-from pipeline.tableau_cloud import TableauCloudPublisher
+from src.agent.ranking_agent import generate_ranking
+from src.pipeline.tableau import TableauDataConverter
+from src.pipeline.tableau_cloud import TableauCloudPublisher
 import tableauserverclient as TSC
 
 

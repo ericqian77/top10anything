@@ -17,9 +17,25 @@ A powerful integration between AI agents and Tableau that helps you:
 - 🔄 **Tableau Embed Integration**: Embedded Tableau dashboard that updates automatically when AI agent generates new rankings
 - ⚙️ **Automated Workflow**: End-to-end pipeline from data processing to visualization
 
-## Configure environment variables
 
-## Usage
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/ericqian77/top10anything.git
+cd top10anything
+```
+2. Create and activate a virtual environment (recommended):
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+```
+3. Install the package in editable mode with all dependencies:
+```bash
+pip install -e .
+```
+
+## Configure the project
 
 ### 1. Backend Setup
 Configure Tableau credentials in `.env`:
@@ -29,15 +45,33 @@ TABLEAU_PROJECT_NAME=your_project
 TABLEAU_TOKEN_NAME=your_token_name
 TABLEAU_TOKEN_VALUE=your_token_value
 ```
+### 2. Tableau published data source initialization
 
-### 2. Access the Dashboard
+1. Locate the example Hyper file:
+   ```
+   data/Initial/initial.hyper.example
+   ```
+
+2. Publish this initial Hyper file to Tableau:
+   - Open Tableau Desktop
+   - Connect to the Hyper file (File > Open > Browse to initial.hyper.example)
+   - Publish as Data Source (Server > Publish Data Source)
+   - Set a unique name for your data source (e.g., "top10_rankings_yourname")
+   - update the **TABLEAU_DATASOURCE_NAME** in the .env file
+
+### 3. Update src\web\static\index.html
+   - update the you embedding url in the index.html file to your tableau cloud workbook url
+
+### 4. Access the Dashboard
 1. Start the application:
    ```bash
    python -m src.web.run   
    ```
 2. Open `http://localhost:8000` in your browser
 
-### 3. Analyze Topics
+## Usage
+
+### 5. Analyze Topics
 1. Enter a topic in the input field. Example topics:
    - "Best universities in Canada"
    - "Top programming languages 2024"
@@ -82,8 +116,5 @@ TABLEAU_TOKEN_VALUE=your_token_value
 - tableau Data model improvements (multi-table, etc.)
 - enhancement for data validation and error handling
 - human-in-the-loop for final review and approval
-  
-## Contributors
-- @ericqian77 - project lead and developer
 
 

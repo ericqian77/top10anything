@@ -1,8 +1,43 @@
 [project]
 name = "top10_analytics"
 version = "0.1.0"
+description = "AI Agent Powered Ranking Insights with Tableau"
+requires-python = ">=3.9"
 dependencies = [
-    "httpx>=0.27.0",
-    "pydantic>=2.10.0",
-    "python-dotenv>=0.21.0"
-] 
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-ai>=0.0.20",
+    "duckduckgo-search>=4.1.0",
+    "tableauserverclient>=0.25.0",
+    "pantab>=3.0.0",
+    "tableauhyperapi>=0.0.21200",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "starlette>=0.45.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "python-dateutil>=2.8.2",
+    "typing-extensions>=4.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-v"
+testpaths = ["tests"]
+
+[tool.hatch.build]
+packages = ["src"]
+include = ["src/**/*.py"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/top10_analytics"] 

@@ -1,9 +1,14 @@
+# Standard library imports
 from dataclasses import dataclass
-from pydantic_ai import Agent, RunContext, ModelRetry
-from models.ranking import RankingResult, RankingItem
-from agent.search import web_search, SearchError
-from typing import Any, List, Dict
 from datetime import datetime, UTC
+from typing import Any, List, Dict
+
+# Third-party imports
+from pydantic_ai import Agent, RunContext, ModelRetry
+
+# Local imports
+from src.models.ranking import RankingResult, RankingItem
+from src.agent.search import web_search, SearchError
 
 @dataclass
 class RankingDependencies:
