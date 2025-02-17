@@ -28,11 +28,11 @@ class AnalysisResponse(BaseModel):
 async def get_ranking_service() -> RankingService:
     """Dependency to get RankingService instance"""
     publisher = TableauCloudPublisher(
-        server_url=os.getenv('TABLEAU_SERVER_URL'),
-        site_name=os.getenv('TABLEAU_SITE_NAME'),
-        token_name=os.getenv('TABLEAU_TOKEN_NAME'),
-        token_value=os.getenv('TABLEAU_TOKEN_VALUE'),
-        datasource_name=os.getenv('TABLEAU_DATASOURCE_NAME')
+        server_url=os.getenv("TABLEAU_SERVER_URL"),
+        site_name=os.getenv("TABLEAU_SITE_NAME"),
+        token_name=os.getenv("TABLEAU_TOKEN_NAME"),
+        token_value=os.getenv("TABLEAU_TOKEN_VALUE"),
+        datasource_name=os.getenv("TABLEAU_DATASOURCE_NAME")
     )
     return RankingService(publisher)
 
